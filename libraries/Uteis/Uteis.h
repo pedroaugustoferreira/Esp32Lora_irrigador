@@ -158,7 +158,7 @@ void config_wifi(char mqtt_server[40], char mqtt_port[6],char mqtt_user[34],char
   //sets timeout until configuration portal gets turned off
   //useful to make it all retry or go to sleep
   //in seconds
-  //wifiManager.setTimeout(120);
+  wifiManager.setTimeout(30);
 
   //fetches ssid and pass and tries to connect
   //if it does not connect it starts an access point with the specified name
