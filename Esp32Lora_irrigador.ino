@@ -28,6 +28,7 @@ char mqtt_user[34] = "mqtt_user";
 char mqtt_password[34] = "mqtt_password";
 char mqtt_topic[34] = "mqtt_topic";
 
+
 const int PIN_AP = 0;
 
 
@@ -60,6 +61,9 @@ void setup() {
 void loop() {
 reset_config(PIN_AP);
 loop_mqtt(mqtt_server,mqtt_port,mqtt_user,mqtt_password,mqtt_topic);
+mqtt_enviar_umidade();
+
+ 
 
 }
 

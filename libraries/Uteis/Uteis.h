@@ -1,3 +1,5 @@
+#define TOPICO_SUBSCRIBE "MQTTFilipeFlopEnvia"  
+
 
 //flag for saving data
 bool shouldSaveConfig = false;
@@ -55,6 +57,10 @@ char* string2char(String command){
         return p;
     }
 }
+
+
+
+
 
 void reset_config(int PIN_AP){
 	 if ( digitalRead(PIN_AP) == LOW ) {
@@ -158,7 +164,7 @@ void config_wifi(char mqtt_server[40], char mqtt_port[6],char mqtt_user[34],char
   //sets timeout until configuration portal gets turned off
   //useful to make it all retry or go to sleep
   //in seconds
-  wifiManager.setTimeout(30);
+  wifiManager.setTimeout(60);
 
   //fetches ssid and pass and tries to connect
   //if it does not connect it starts an access point with the specified name
@@ -215,11 +221,47 @@ void config_wifi(char mqtt_server[40], char mqtt_port[6],char mqtt_user[34],char
   }
 }
 
+void mqtt_enviar_umidade(){
+int val;	
+val = analogRead(36); //connect sensor to Analog 0	
+Serial.println(val); //print the value to serial port	
+	
+
+	
+	
+
+	char topico[12] = "esp/umidade";
+	char valor[12];
+	//itoa(val, valor, 12);
+	sprintf(valor, "%5d", val);
+	
+	
+	
+	//valor[12] = char(analogRead(36));
+	//char(analogRead(36));
+//  Serial.println(val); //print the value to serial port
+  client.publish(topico, valor);
+  delay(1000);
+  
+  
+  
+  
+  //delay(1000);
+  
+}
+
 void loop_mqtt(char mqtt_server[40], char mqtt_port[6],char mqtt_user[34],char mqtt_password[34],char mqtt_topic[34]){
 	
    if (!client.connected()) {
     setup_mqtt(mqtt_server,mqtt_port,mqtt_user,mqtt_password,mqtt_topic);
   }
+  
   client.loop();
 }
+
+
+
+
+
+
 
