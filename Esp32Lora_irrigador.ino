@@ -20,6 +20,7 @@
 
 #include <PubSubClient.h>
 #include <Uteis.h>
+#include <Log.h>
 
 //define your default values here, if there are different values in config.json, they are overwritten.
 char mqtt_server[40];
@@ -46,7 +47,8 @@ void setup() {
  config_wifi(mqtt_server,mqtt_port,mqtt_user,mqtt_password,mqtt_topic);
  
  
-
+  msg("local ip");
+  msg(WiFi.localIP().toString().c_str());
   Serial.println("local ip");
   Serial.println(WiFi.localIP());
 
