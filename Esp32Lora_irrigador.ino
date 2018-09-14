@@ -39,7 +39,7 @@ void setup() {
   // put your setup code here, to run once:
   Serial.begin(115200);
   pinMode(PIN_AP, INPUT);
-  Serial.println();
+
 
   //clean FS, for testing
   //SPIFFS.format();
@@ -48,10 +48,9 @@ void setup() {
  config_wifi(mqtt_server,mqtt_port,mqtt_user,mqtt_password,mqtt_topic);
  
  
-  msg("local ip");
-  msg(WiFi.localIP().toString().c_str());
-  Serial.println("local ip");
-  Serial.println(WiFi.localIP());
+//  msg("local ip");
+//  msg(WiFi.localIP().toString().c_str());
+
 
    setup_mqtt(mqtt_server,mqtt_port,mqtt_user,mqtt_password,mqtt_topic);
 

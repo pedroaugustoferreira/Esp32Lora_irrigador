@@ -40,6 +40,9 @@ u8x8.draw1x2String(0, 6, linha4.c_str());
 
 Serial.println(msg);
 
+delay(1000);
+
+
 
 }
 

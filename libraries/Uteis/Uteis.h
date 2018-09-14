@@ -31,16 +31,17 @@ void setup_mqtt(char mqtt_server[40], char mqtt_port[6],char mqtt_user[34],char 
   client.setCallback(callback);
  
   while (!client.connected()) {
-    Serial.println("Connecting to MQTT...");
+    msg("Conectando MQTT");
  
     if (client.connect("ESP32 Lora", mqtt_user, mqtt_password )) {
  
-      Serial.println("connected");  
+      msg("MQTT Conectado");  
  
     } else {
  
-      Serial.print("failed with state ");
-      Serial.print(client.state());
+      msg("mqtt falha ");
+	  msg(String(client.state()));
+
       delay(2000);
  
     }
@@ -115,10 +116,22 @@ void fs_read(char mqtt_server[40], char mqtt_port[6],char mqtt_user[34],char mqt
 }
 
 
-//callback notifying us of the need to save config
-void saveConfigCallback () {
-  Serial.println("Should save config");
+
+
+
+void mysaveConfigCallback () {
+//  Serial.println("Should save config");
+  msg("Modo cliente");
+  msg(WiFi.softAPIP().toString()); //imprime o IP do AP
   shouldSaveConfig = true;
+}
+
+void configModeCallback (WiFiManager *myWiFiManager) {  
+//  Serial.println("Entered config mode");
+  msg("Modo AP");
+  msg(WiFi.softAPIP().toString()); //imprime o IP do AP
+  msg(myWiFiManager->getConfigPortalSSID()); //imprime o SSID criado da rede
+
 }
 
 
@@ -139,8 +152,10 @@ void config_wifi(char mqtt_server[40], char mqtt_port[6],char mqtt_user[34],char
   
   WiFiManager wifiManager;
 
+  wifiManager.setAPCallback(configModeCallback);
+  
   //set config save notify callback
-  wifiManager.setSaveConfigCallback(saveConfigCallback);
+  wifiManager.setSaveConfigCallback(mysaveConfigCallback);
 
   //set static ip
   //wifiManager.setSTAStaticIPConfig(IPAddress(10,0,1,99), IPAddress(10,0,1,1), IPAddress(255,255,255,0));
@@ -164,7 +179,7 @@ void config_wifi(char mqtt_server[40], char mqtt_port[6],char mqtt_user[34],char
   //sets timeout until configuration portal gets turned off
   //useful to make it all retry or go to sleep
   //in seconds
-  wifiManager.setTimeout(60);
+  wifiManager.setTimeout(120);
 
   
   
@@ -174,18 +189,17 @@ void config_wifi(char mqtt_server[40], char mqtt_port[6],char mqtt_user[34],char
   //and goes into a blocking loop awaiting configuration
 
   if (!wifiManager.autoConnect("AutoConnectAP", "password")) {
-    msg("Wifi failed to");
-    msg("connect and");
-    msg("hit timeout");
+    msg("Falha ao conectar");
+    msg("no wifi");
     delay(3000);
-	msg("Reset");
+	msg("Reset...");
     //reset and try again, or maybe put it to deep sleep
     ESP.restart();
     delay(5000);
   }
 
   //if you get here you have connected to the WiFi
-  msg("connected");
+  msg("Wifi conectado");
 
   //read updated parameters
   strcpy(mqtt_server, custom_mqtt_server.getValue());
@@ -230,7 +244,7 @@ void config_wifi(char mqtt_server[40], char mqtt_port[6],char mqtt_user[34],char
 void mqtt_enviar_umidade(){
 int val;	
 val = analogRead(36); //connect sensor to Analog 0	
-Serial.println(val); //print the value to serial port	
+
 	
 
 	
@@ -240,6 +254,7 @@ Serial.println(val); //print the value to serial port
 	char valor[12];
 	//itoa(val, valor, 12);
 	sprintf(valor, "%5d", val);
+	msg(valor);
 	
 	
 	
