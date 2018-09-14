@@ -123,7 +123,7 @@ void saveConfigCallback () {
 
 
 void config_wifi(char mqtt_server[40], char mqtt_port[6],char mqtt_user[34],char mqtt_password[34],char mqtt_topic[34]){
-	
+  msg("Start Wifi");
 
   // The extra parameters to be configured (can be either global or just in the setup)
   // After connecting, parameter.getValue() will get you the configured value
@@ -166,20 +166,26 @@ void config_wifi(char mqtt_server[40], char mqtt_port[6],char mqtt_user[34],char
   //in seconds
   wifiManager.setTimeout(60);
 
+  
+  
   //fetches ssid and pass and tries to connect
   //if it does not connect it starts an access point with the specified name
   //here  "AutoConnectAP"
   //and goes into a blocking loop awaiting configuration
+
   if (!wifiManager.autoConnect("AutoConnectAP", "password")) {
-    Serial.println("failed to connect and hit timeout");
+    msg("Wifi failed to");
+    msg("connect and");
+    msg("hit timeout");
     delay(3000);
+	msg("Reset");
     //reset and try again, or maybe put it to deep sleep
     ESP.restart();
     delay(5000);
   }
 
   //if you get here you have connected to the WiFi
-  Serial.println("connected...yeey :)");
+  msg("connected");
 
   //read updated parameters
   strcpy(mqtt_server, custom_mqtt_server.getValue());
